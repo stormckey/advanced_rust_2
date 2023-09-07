@@ -13,13 +13,13 @@ impl<T> MyRc<T>{
     fn new(data:T) -> MyRc<T>{
         let layout = Layout::new::<RefCount<T>>();
         unsafe{
-            let rc: *mut RefCount<T> = alloc(layout) as *mut RefCount<T>;
-            if rc.is_null(){
+            let sp: *mut RefCount<T> = alloc(layout) as *mut RefCount<T>;
+            if sp.is_null(){
                 handle_alloc_error(layout);
             }
-            (*rc).data = data;
-            (*rc).count = 1;
-            MyRc{ sp: rc }
+            (*sp).data = data;
+            (*sp).count = 1;
+            MyRc{ sp }
         }
     }
     fn count(&self) -> usize{
@@ -54,7 +54,6 @@ impl<T> Deref for MyRc<T>{
         unsafe{
             (*self.sp).count -= 1;
             if (*self.sp).count == 0{
-                println!("The RefCount is reset and the data will be freed.");
                 dealloc(self.sp as *mut u8, Layout::new::<RefCount<T>>());
             }
         }
