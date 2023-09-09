@@ -10,20 +10,21 @@ impl<T> SimpleStack<T> {
             stack: RefCell::new(Vec::new()),
         }
     }
-    fn push(&mut self, v: T) {
+    fn push(&self, v: T) {
         self.stack.borrow_mut().push(v);
     }
-    fn pop(&mut self) -> Option<T> {
+    fn pop(&self) -> Option<T> {
         self.stack.borrow_mut().pop()
     }
 }
+
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
     fn test_my_stack() {
-        let mut stack = SimpleStack::new();
+        let stack = SimpleStack::new();
         stack.push(1);
         stack.push(2);
         stack.push(3);
